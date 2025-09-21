@@ -23,9 +23,4 @@ pipeline {
       steps { archiveArtifacts artifacts: '**/*.py', fingerprint: true }
     }
   }
-  post {
-    always {
-      junit allowEmptyResults: true, testResults: '**/pytest*.xml'
-    }
-  }
 }
