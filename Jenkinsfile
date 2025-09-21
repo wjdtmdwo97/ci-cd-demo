@@ -1,20 +1,19 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'python:3.11-slim'
+      args  '-u root'
+    }
+  }
   stages {
     stage('Checkout') {
       steps { checkout scm }
     }
-    stage('Setup Python') {
-      steps {
-        sh '''
-          set -e
-          python3 -V || (sudo apt-get update && sudo apt-get install -y python3 python3-pip)
-          python3 -m pip install --upgrade pip
-        '''
-      }
-    }
     stage('Install deps') {
-      steps { sh 'pip3 install -r requirements.txt' }
+      steps {
+        sh 'python -m pip install --upgrade pip'
+        sh 'pip install -r requirements.txt'
+      }
     }
     stage('Test') {
       steps { sh 'pytest -q' }
